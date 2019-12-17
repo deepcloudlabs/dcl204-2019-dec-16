@@ -2,6 +2,7 @@ package com.example.animals.app;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.ToIntFunction;
 
 import com.example.animals.domain.Animal;
 import com.example.animals.domain.Cat;
@@ -32,6 +33,21 @@ public class AnimalApp {
 			}
 		}
 		
+		int legs = 0;
+		for (Animal animal : animals)
+			if (animal instanceof Pet) 
+			   legs += animal.getLegs();
+		System.out.println(legs);
+		
+		ToIntFunction<Animal> mapToLegs = 
+//			animal -> animal.getLegs()	;
+				Animal::getLegs;
+		legs = animals.stream()
+//		       .filter(animal -> animal instanceof Pet)
+		       .filter(Pet.class::isInstance)
+		       .mapToInt(mapToLegs)
+		       .sum();
+		System.out.println(legs);
 	}
 
 }
