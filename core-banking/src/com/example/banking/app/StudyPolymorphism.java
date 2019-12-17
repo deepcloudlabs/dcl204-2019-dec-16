@@ -11,20 +11,19 @@ import com.example.banking.entity.CheckingAccount;
  */
 public class StudyPolymorphism {
 
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Object o = 42;
 		o = "Jack";
 		o = false;
 		o = BigInteger.valueOf(1_000_000L);
-		o = new Account("TR3",3_000);
-		Account acc ;
-		ThreadLocalRandom random = 
-				ThreadLocalRandom.current();
+		o = new Account("TR3", 3_000);
+		Account acc;
+		ThreadLocalRandom random = ThreadLocalRandom.current();
 		if (random.nextBoolean())
-			acc = new Account("TR1",1_000);
+			acc = new Account("TR1", 1_000);
 		else
-			acc = new CheckingAccount("TR2", 
-					1_500, 500);
+			acc = new CheckingAccount("TR2", 1_500, 500);
 		System.out.println(acc.getClass());
 		acc.withdraw(1); // which withdraw?
 	}
