@@ -1,19 +1,19 @@
 package com.example.banking.entity;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
-public class Customer {
+public final class Customer {
 	private final String identity;
 	private String fullname;
-	private final List<Account> accounts;
+	private final Map<String, Account> accounts;
 
-	public Customer(String identity, String fullname) {
+	public Customer(final String identity, final String fullname) {
 		this.identity = identity;
 		this.fullname = fullname;
-		this.accounts = new ArrayList<>();
+		this.accounts = new HashMap<>();
 	}
 
 	public String getIdentity() {
@@ -29,29 +29,26 @@ public class Customer {
 	}
 
 	public void addAccount(Account account) {
-		this.accounts.add(account);
+		String iban = account.getIban();
+		this.accounts.put(iban, account);
 	}
 
 	public Optional<Account> getAccount(String iban) {
-		for (Account acc : accounts)
-			if (acc.getIban().equals(iban))
-				return Optional.of(acc);
-		return Optional.empty();
+		return Optional.ofNullable(accounts.get(iban));
 	}
 
 	public double getBalance() {
 		double sum = 0.0;
-		for (Account acc : accounts)
+		for (Account acc : accounts.values())
 			sum += acc.getBalance();
 		return sum;
 	}
 
 	public double getBalance8() {
-		return accounts.stream().mapToDouble(Account::getBalance).sum();
+		return accounts.values().stream().mapToDouble(Account::getBalance).sum();
 	}
 
-	public List<Account> getAccounts() {
-//		return new ArrayList<>(accounts);
-		return Collections.unmodifiableList(accounts);
+	public Collection<Account> getAccounts() {
+		return accounts.values();
 	}
 }
