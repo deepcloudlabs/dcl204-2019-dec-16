@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * @author Binnur Kurt <binnur.kurt@gmail.com>
@@ -107,15 +108,33 @@ public class Bank {
 		return false;
 	}
 	
+	public void generateReport() {
+		generateReport(Locale.US);
+	}
+	
 	public void generateReport(Locale locale) {
+		generateReport(locale, 
+	Comparator.comparing(Customer::getFullname),
+				System.out::println);
+	}
+	
+	public void generateReport(Locale locale,
+			        Comparator<Customer> orderBy,
+			        Consumer<Customer> printCustomer) {
 		customers.values()
 		         .stream()
-		         .sorted(
-				        Comparator.comparing(
-				        	Customer::getFullname
-				        )
-				    ).forEach(System.out::println);
+		         .sorted(orderBy)
+				 .forEach(printCustomer);
 	}
 }
 
+//			Comparator.comparing(Customer::getBalance)
+//			          .reversed()
+//		            (c1,c2) -> {
+//       return c1.getBalance() >= c2.getBalance() ?
+//    		             -1 : +1 ;
+//		            }		 
+//				        Comparator.comparing(
+//				        	Customer::getFullname
+//				        )
 

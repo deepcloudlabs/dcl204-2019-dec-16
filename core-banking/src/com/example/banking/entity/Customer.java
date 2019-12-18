@@ -54,7 +54,11 @@ public final class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [identity=" + identity + ", fullname=" + fullname + "]";
+		return "Customer [identity=" + identity 
+				 + ", fullname=" + fullname
+				 + ", balance= " + getBalance()
+				 + ", numOfAccounts= " + accounts.size()
+				 + "]";
 	}
 
 }

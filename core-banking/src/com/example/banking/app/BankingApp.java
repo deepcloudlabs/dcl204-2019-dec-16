@@ -1,5 +1,7 @@
 package com.example.banking.app;
 
+import java.text.DecimalFormat;
+import java.util.Comparator;
 import java.util.Locale;
 
 import com.example.banking.entity.Account;
@@ -21,6 +23,20 @@ public class BankingApp {
 		Customer james = 
 				garanti.createCustomer("3", "James Sawyer");
 		james.addAccount(new Account("TR6", 2_000));
-		garanti.generateReport(Locale.ITALY);
+		Locale locale = Locale.FRANCE;
+		DecimalFormat df = (DecimalFormat) 
+			DecimalFormat.getCurrencyInstance(locale);
+		garanti.generateReport(
+			locale,
+		    Comparator.comparing(Customer::getBalance),
+			customer -> System.out.println(
+				String.format("%16s %11s %2d %16s", 
+					customer.getFullname(),
+					customer.getIdentity(),
+					customer.getNumOfAccounts(),
+					df.format(customer.getBalance())
+				)
+			 )
+		);
 	}
 }
