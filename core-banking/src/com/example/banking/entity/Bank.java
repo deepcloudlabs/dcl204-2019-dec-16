@@ -1,7 +1,9 @@
 package com.example.banking.entity;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -104,4 +106,16 @@ public class Bank {
 		}
 		return false;
 	}
+	
+	public void generateReport(Locale locale) {
+		customers.values()
+		         .stream()
+		         .sorted(
+				        Comparator.comparing(
+				        	Customer::getFullname
+				        )
+				    ).forEach(System.out::println);
+	}
 }
+
+

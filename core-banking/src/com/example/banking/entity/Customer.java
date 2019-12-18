@@ -51,4 +51,10 @@ public final class Customer {
 	public Collection<Account> getAccounts() {
 		return accounts.values();
 	}
+
+	@Override
+	public String toString() {
+		return "Customer [identity=" + identity + ", fullname=" + fullname + "]";
+	}
+
 }
