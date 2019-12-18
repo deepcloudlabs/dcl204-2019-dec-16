@@ -1,5 +1,9 @@
 package com.example.banking.entity;
 
+import java.text.MessageFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -7,6 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 /**
@@ -15,7 +20,7 @@ import java.util.function.Consumer;
 public class Bank {
 	private final int id;
 	private final String name;
-	private Map<String,Customer> customers;
+	private Map<String, Customer> customers;
 
 	public Bank(int id, String name) {
 		this.id = id;
@@ -37,13 +42,12 @@ public class Bank {
 
 	public final Customer createCustomer(String identity, String fullname) {
 		Customer customer = new Customer(identity, fullname);
-		customers.put(identity,customer);
+		customers.put(identity, customer);
 		return customer;
 	}
 
 	public Optional<Customer> findCustomerByIdentity(String identity) {
-		return Optional.ofNullable(
-				customers.get(identity));
+		return Optional.ofNullable(customers.get(identity));
 	}
 
 	public double getBalance() {
@@ -60,8 +64,8 @@ public class Bank {
 	}
 
 	public Optional<Account> getAccount9(String iban) {
-		return customers.values().stream().map(cust -> cust.getAccount(iban)).filter(Optional::isPresent).map(Optional::get)
-				.findFirst();
+		return customers.values().stream().map(cust -> cust.getAccount(iban)).filter(Optional::isPresent)
+				.map(Optional::get).findFirst();
 	}
 
 	public Optional<Account> getAccount(String iban) {
@@ -107,34 +111,23 @@ public class Bank {
 		}
 		return false;
 	}
-	
+
 	public void generateReport() {
 		generateReport(Locale.US);
 	}
-	
+
 	public void generateReport(Locale locale) {
-		generateReport(locale, 
-	Comparator.comparing(Customer::getFullname),
-				System.out::println);
+		generateReport(locale, Comparator.comparing(Customer::getFullname), System.out::println);
 	}
-	
-	public void generateReport(Locale locale,
-			        Comparator<Customer> orderBy,
-			        Consumer<Customer> printCustomer) {
-		customers.values()
-		         .stream()
-		         .sorted(orderBy)
-				 .forEach(printCustomer);
+
+	public void generateReport(Locale locale, Comparator<Customer> orderBy, Consumer<Customer> printCustomer) {
+		System.out.println("==========================================================================");
+		ZonedDateTime now = ZonedDateTime.now();
+		DateTimeFormatter dtf = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL).withLocale(locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("report", locale);
+		MessageFormat formatter = new MessageFormat(bundle.getString("report.heading"), locale);
+		System.out.println(formatter.format(new Object[] { dtf.format(now) }));
+		customers.values().stream().sorted(orderBy).forEach(printCustomer);
+		System.out.println("==========================================================================");
 	}
 }
-
-//			Comparator.comparing(Customer::getBalance)
-//			          .reversed()
-//		            (c1,c2) -> {
-//       return c1.getBalance() >= c2.getBalance() ?
-//    		             -1 : +1 ;
-//		            }		 
-//				        Comparator.comparing(
-//				        	Customer::getFullname
-//				        )
-
