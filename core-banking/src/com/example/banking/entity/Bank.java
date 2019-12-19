@@ -68,13 +68,13 @@ public class Bank {
 				.map(Optional::get).findFirst();
 	}
 
-	public Optional<Account> getAccount(String iban) {
+	public Account getAccount(String iban) {
 		for (Customer customer : customers.values()) {
 			Optional<Account> account = customer.getAccount(iban);
 			if (account.isPresent())
-				return account;
+				return account.get();
 		}
-		return Optional.empty();
+		throw new AccountNotFoundException(iban, "Cannot find the account!");
 	}
 
 	public Account getAccountValue(String iban) {
@@ -88,13 +88,16 @@ public class Bank {
 
 	public void transfer(String fromIban, String toIban, double amount) throws InsufficientBalanceException {
 		if (amount <= 0)
-			throw new IllegalArgumentException(
-					"Amount should be positive!");
-		Optional<Account> fromAccount = getAccount(fromIban);
-		Optional<Account> toAccount = getAccount(toIban);
-		if (fromAccount.isPresent() && toAccount.isPresent()) {
-			fromAccount.get().withdraw(amount);
-			toAccount.get().deposit(amount);
+			throw new IllegalArgumentException("Amount should be positive!");
+		Account fromAccount = getAccount(fromIban);
+		Account toAccount = getAccount(toIban);
+		// "Transactional"
+		try {
+			// TODO: apply memento pattern
+			fromAccount.withdraw(amount);
+			toAccount.deposit(amount);
+		} catch (Throwable e) {
+			// TODO: restore the state back to the accounts
 		}
 	}
 
