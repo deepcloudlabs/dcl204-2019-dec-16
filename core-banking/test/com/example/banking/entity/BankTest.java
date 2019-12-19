@@ -27,41 +27,41 @@ class BankTest {
 	}
 
 	@Test
-	void transfer_existingIbans() {
+	void transfer_existingIbans() throws InsufficientBalanceException {
 		Bank garanti = new Bank(1, "Garanti Bankası A.Ş.");
 		Customer jack = garanti.createCustomer("1", "Jack Bauer");
 		Customer kate = garanti.createCustomer("2", "Kate Austen");
 		jack.addAccount(new Account("TR1", 100_000));
 		kate.addAccount(new CheckingAccount("TR2", 200_000, 50_000));
 		assertEquals(2, garanti.getCustomers().size());
-		assertTrue(garanti.transfer("TR1", "TR2", 25_000));
+		garanti.transfer("TR1", "TR2", 25_000);
 		assertEquals(75_000, jack.getAccount("TR1").get().getBalance());
 		assertEquals(225_000, kate.getAccount("TR2").get().getBalance());
 	}
 
 	@Test
-	void transfer_nonexistingIbans() {
+	void transfer_nonexistingIbans() throws InsufficientBalanceException {
 		Bank garanti = new Bank(1, "Garanti Bankası A.Ş.");
 		Customer jack = garanti.createCustomer("1", "Jack Bauer");
 		Customer kate = garanti.createCustomer("2", "Kate Austen");
 		jack.addAccount(new Account("TR1", 100_000));
 		kate.addAccount(new CheckingAccount("TR2", 200_000, 50_000));
 		assertEquals(2, garanti.getCustomers().size());
-		assertFalse(garanti.transfer("TR1", "TR3", 25_000));
-		assertFalse(garanti.transfer("TR3", "TR2", 25_000));
+		garanti.transfer("TR1", "TR3", 25_000);
+		garanti.transfer("TR3", "TR2", 25_000);
 		assertEquals(100_000, jack.getAccount("TR1").get().getBalance());
 		assertEquals(200_000, kate.getAccount("TR2").get().getBalance());
 	}
 
 	@Test
-	void transferBetweenExistingIbansWithInsufficientBalance() {
+	void transferBetweenExistingIbansWithInsufficientBalance() throws InsufficientBalanceException {
 		Bank garanti = new Bank(1, "Garanti Bankası A.Ş.");
 		Customer jack = garanti.createCustomer("1", "Jack Bauer");
 		Customer kate = garanti.createCustomer("2", "Kate Austen");
 		jack.addAccount(new Account("TR1", 100_000));
 		kate.addAccount(new CheckingAccount("TR2", 200_000, 50_000));
 		assertEquals(2, garanti.getCustomers().size());
-		assertFalse(garanti.transfer("TR1", "TR2", 250_000));
+		assertThrows(InsufficientBalanceException.class, () -> garanti.transfer("TR1", "TR2", 250_000));
 		assertEquals(100_000, jack.getAccount("TR1").get().getBalance());
 		assertEquals(200_000, kate.getAccount("TR2").get().getBalance());
 	}
@@ -74,7 +74,7 @@ class BankTest {
 		jack.addAccount(new Account("TR1", 100_000));
 		kate.addAccount(new CheckingAccount("TR2", 200_000, 50_000));
 		assertEquals(2, garanti.getCustomers().size());
-		assertFalse(garanti.transfer("TR1", "TR2", -5_000));
+		assertThrows(IllegalArgumentException.class, () -> garanti.transfer("TR1", "TR2", -5_000));
 	}
 
 	@Test

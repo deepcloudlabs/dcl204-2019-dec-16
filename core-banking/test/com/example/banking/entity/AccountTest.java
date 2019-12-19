@@ -13,7 +13,7 @@ class AccountTest {
 		assertEquals("TR1", acc.getIban());
 		assertEquals(1_000, acc.getBalance());
 		// Exercise Method + Verify State
-		assertFalse(acc.deposit(-10));
+		assertThrows(IllegalArgumentException.class, () -> acc.deposit(-10));
 		assertEquals(1_000, acc.getBalance());
 	}
 
@@ -24,25 +24,28 @@ class AccountTest {
 		assertEquals("TR1", acc.getIban());
 		assertEquals(1_000, acc.getBalance());
 		// Exercise Method + Verify State
-		assertTrue(acc.deposit(1));
+		acc.deposit(1);
 		assertEquals(1_001, acc.getBalance());
 	}
 
 	@Test
 	void withdraw_withNegativeAmount() {
 		Account acc = new Account("TR1", 1_000);
-		assertFalse(acc.withdraw(-10));
+		assertThrows(IllegalArgumentException.class, () -> acc.withdraw(-10));
 		assertEquals(1_000, acc.getBalance());
 	}
-	@Test void withdraw_overBalance() {
-		Account acc = new Account("TR1", 1_000);
-		assertFalse(acc.withdraw(1_001));
-		assertEquals(1_000, acc.getBalance());
-	}
+
 	@Test
-	void withdraw_allBalance() {
+	void withdraw_overBalance() {
 		Account acc = new Account("TR1", 1_000);
-		assertTrue(acc.withdraw(1_000));
+		assertThrows(InsufficientBalanceException.class, () -> acc.withdraw(1_001));
+		assertEquals(1_000, acc.getBalance());
+	}
+
+	@Test
+	void withdraw_allBalance() throws InsufficientBalanceException {
+		Account acc = new Account("TR1", 1_000);
+		acc.withdraw(1_000);
 		assertEquals(0, acc.getBalance());
 	}
 

@@ -86,30 +86,25 @@ public class Bank {
 		return null;
 	}
 
-	public boolean transfer(String fromIban, String toIban, double amount) {
+	public void transfer(String fromIban, String toIban, double amount) throws InsufficientBalanceException {
 		if (amount <= 0)
-			return false;
+			throw new IllegalArgumentException(
+					"Amount should be positive!");
 		Optional<Account> fromAccount = getAccount(fromIban);
 		Optional<Account> toAccount = getAccount(toIban);
 		if (fromAccount.isPresent() && toAccount.isPresent()) {
-			if (fromAccount.get().withdraw(amount)) {
-				toAccount.get().deposit(amount);
-				return true;
-			}
+			fromAccount.get().withdraw(amount);
+			toAccount.get().deposit(amount);
 		}
-		return false;
 	}
 
-	public boolean transferValue(String fromIban, String toIban, double amount) {
+	public void transferValue(String fromIban, String toIban, double amount) throws InsufficientBalanceException {
 		Account fromAccount = getAccountValue(fromIban);
 		Account toAccount = getAccountValue(toIban);
 		if (Objects.nonNull(fromAccount) && Objects.nonNull(toAccount)) {
-			if (fromAccount.withdraw(amount)) {
-				toAccount.deposit(amount);
-				return true;
-			}
+			fromAccount.withdraw(amount);
+			toAccount.deposit(amount);
 		}
-		return false;
 	}
 
 	public void generateReport() {

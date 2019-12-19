@@ -15,17 +15,17 @@ class CheckingAccountTest {
 		assertEquals("TR1", acc.getIban());
 		assertEquals(1_000, acc.getBalance());
 		assertEquals(500, acc.getOverdraftAmount());
-		assertFalse(acc.withdraw(-1));
+		assertThrows(IllegalArgumentException.class, () -> acc.withdraw(-10));
 		assertEquals(1_000, acc.getBalance());
 	}
 
 	@Test
-	void withdraw_OverBalanceSuccess() {
+	void withdraw_OverBalanceSuccess() throws InsufficientBalanceException {
 		CheckingAccount acc = new CheckingAccount("TR1", 1_000, 500);
 		assertEquals("TR1", acc.getIban());
 		assertEquals(1_000, acc.getBalance());
 		assertEquals(500, acc.getOverdraftAmount());
-		assertTrue(acc.withdraw(1500));
+		acc.withdraw(1_500);
 		assertEquals(-500, acc.getBalance());
 	}
 
@@ -35,17 +35,17 @@ class CheckingAccountTest {
 		assertEquals("TR1", acc.getIban());
 		assertEquals(1_000, acc.getBalance());
 		assertEquals(500, acc.getOverdraftAmount());
-		assertFalse(acc.withdraw(1501));
+		assertThrows(InsufficientBalanceException.class, () -> acc.withdraw(1_501));
 		assertEquals(1_000, acc.getBalance());
 	}
 
 	@Test
-	void withdraw_AllBalanceSuccess() {
+	void withdraw_AllBalanceSuccess() throws InsufficientBalanceException {
 		CheckingAccount acc = new CheckingAccount("TR1", 1_000, 500);
 		assertEquals("TR1", acc.getIban());
 		assertEquals(1_000, acc.getBalance());
 		assertEquals(500, acc.getOverdraftAmount());
-		assertTrue(acc.withdraw(1000));
+		acc.withdraw(1000);
 		assertEquals(0, acc.getBalance());
 	}
 }

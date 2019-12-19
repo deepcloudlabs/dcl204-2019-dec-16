@@ -36,26 +36,26 @@ public class Account extends Object {
 		return balance;
 	}
 
-	public boolean deposit(final double amount) {
+	public void deposit(final double amount) {
 		// validation
 		if (amount <= 0)
-			return false;
+			throw new IllegalArgumentException(
+					"Amount should be positive!");
 		// business logic
 		balance += amount;
-		return true;
 	}
 
-	public boolean withdraw(final double amount) {
-		System.out.println("Account::withdraw");
+	public void withdraw(final double amount) 
+			      throws InsufficientBalanceException {
 		// validation
 		if (amount <= 0)
-			return false;
+			throw new IllegalArgumentException(
+					"Amount should be positive!");
 		// business rule
 		if (amount > balance)
-			return false;
+			throw new InsufficientBalanceException(amount-balance,"Your balance does not cover your expenses!");
 		// business logic
 		balance -= amount;
-		return true;
 	}
 
 	@Override
