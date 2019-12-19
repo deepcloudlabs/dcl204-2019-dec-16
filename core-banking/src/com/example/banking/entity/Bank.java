@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 /**
  * @author Binnur Kurt <binnur.kurt@gmail.com>
  */
-public class Bank {
+public class Bank implements TransferService {
 	private final int id;
 	private final String name;
 	private Map<String, Customer> customers;
@@ -86,6 +86,7 @@ public class Bank {
 		return null;
 	}
 
+	@Override
 	public void transfer(String fromIban, String toIban, double amount) throws InsufficientBalanceException {
 		if (amount <= 0)
 			throw new IllegalArgumentException("Amount should be positive!");
