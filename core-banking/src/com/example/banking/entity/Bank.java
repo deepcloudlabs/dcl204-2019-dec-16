@@ -99,6 +99,7 @@ public class Bank implements TransferService {
 			toAccount.deposit(amount);
 		} catch (Throwable e) {
 			// TODO: restore the state back to the accounts
+			throw e;
 		}
 	}
 

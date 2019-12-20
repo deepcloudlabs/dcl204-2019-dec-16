@@ -38,7 +38,8 @@ class AccountTest {
 	@Test
 	void withdraw_overBalance() {
 		Account acc = new Account("TR1", 1_000);
-		assertThrows(InsufficientBalanceException.class, () -> acc.withdraw(1_001));
+		InsufficientBalanceException e = assertThrows(InsufficientBalanceException.class, () -> acc.withdraw(1_001));
+		assertEquals(1, e.getDeficit());
 		assertEquals(1_000, acc.getBalance());
 	}
 
