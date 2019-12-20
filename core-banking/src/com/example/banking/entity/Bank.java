@@ -1,5 +1,6 @@
 package com.example.banking.entity;
 
+import java.io.Serializable;
 import java.text.MessageFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,11 +18,14 @@ import java.util.function.Consumer;
 /**
  * @author Binnur Kurt <binnur.kurt@gmail.com>
  */
-public class Bank implements TransferService {
+@SuppressWarnings("serial")
+public class Bank implements TransferService, Serializable {
 	private final int id;
 	private final String name;
 	private Map<String, Customer> customers;
-
+	@SuppressWarnings("unused")
+	transient private String password= "s3c-r3t";
+	
 	public Bank(int id, String name) {
 		this.id = id;
 		this.name = name;

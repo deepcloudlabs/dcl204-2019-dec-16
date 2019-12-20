@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/com/example/banking/app/BankingApp.java=UTF-8
 encoding//src/com/example/banking/app/StudyAopBankingApp.java=UTF-8
+encoding//src/com/example/banking/app/WriteBankToFile.java=UTF-8
 encoding//test/com/example/banking/entity/BankTest.java=UTF-8
 encoding//test/com/example/banking/entity/CustomerTest.java=UTF-8

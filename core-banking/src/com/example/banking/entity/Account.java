@@ -1,6 +1,9 @@
 package com.example.banking.entity;
 
-public class Account extends Object {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Account extends Object implements Serializable{
 	private final String iban;
 	protected double balance;
 	private static int counter;

@@ -3,6 +3,7 @@ package com.example.banking.entity;
 /**
  * @author Binnur Kurt <binnur.kurt@gmail.com>
  */
+@SuppressWarnings("serial")
 public class CheckingAccount extends Account {
 	private double overdraftAmount;
 

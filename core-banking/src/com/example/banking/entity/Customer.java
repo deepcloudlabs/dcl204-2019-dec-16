@@ -1,11 +1,13 @@
 package com.example.banking.entity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public final class Customer {
+@SuppressWarnings("serial")
+public final class Customer implements Serializable {
 	private final String identity;
 	private String fullname;
 	private final Map<String, Account> accounts;
@@ -54,11 +56,8 @@ public final class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [identity=" + identity 
-				 + ", fullname=" + fullname
-				 + ", balance= " + getBalance()
-				 + ", numOfAccounts= " + accounts.size()
-				 + "]";
+		return "Customer [identity=" + identity + ", fullname=" + fullname + ", balance= " + getBalance()
+				+ ", numOfAccounts= " + accounts.size() + "]";
 	}
 
 }
