@@ -47,8 +47,11 @@ class BankTest {
 		jack.addAccount(new Account("TR1", 100_000));
 		kate.addAccount(new CheckingAccount("TR2", 200_000, 50_000));
 		assertEquals(2, garanti.getCustomers().size());
-		assertThrows(AccountNotFoundException.class, () -> garanti.transfer("TR1", "TR3", 25_000));
-		assertThrows(AccountNotFoundException.class, () -> garanti.transfer("TR3", "TR2", 25_000));
+		AccountNotFoundException e = assertThrows(AccountNotFoundException.class,
+				() -> garanti.transfer("TR1", "TR3", 25_000));
+		assertEquals("TR3", e.getIban());
+		e = assertThrows(AccountNotFoundException.class, () -> garanti.transfer("TR4", "TR2", 25_000));
+		assertEquals("TR4", e.getIban());
 		assertEquals(100_000, jack.getAccount("TR1").get().getBalance());
 		assertEquals(200_000, kate.getAccount("TR2").get().getBalance());
 	}
@@ -121,11 +124,11 @@ class BankTest {
 		kate.addAccount(new Account("TR4", 400_000));
 		assertEquals(2, kate.getNumOfAccounts());
 		assertEquals(2, garanti.getCustomers().size());
-		assertEquals("TR1",garanti.getAccount("TR1").getIban());
-		assertEquals("TR2",garanti.getAccount("TR2").getIban());
-		assertEquals("TR3",garanti.getAccount("TR3").getIban());
-		assertEquals("TR4",garanti.getAccount("TR4").getIban());
-		assertThrows( AccountNotFoundException.class, () -> garanti.getAccount("TR5"));
+		assertEquals("TR1", garanti.getAccount("TR1").getIban());
+		assertEquals("TR2", garanti.getAccount("TR2").getIban());
+		assertEquals("TR3", garanti.getAccount("TR3").getIban());
+		assertEquals("TR4", garanti.getAccount("TR4").getIban());
+		assertThrows(AccountNotFoundException.class, () -> garanti.getAccount("TR5"));
 		assertTrue(garanti.getAccount9("TR1").isPresent());
 		assertTrue(garanti.getAccount9("TR2").isPresent());
 		assertTrue(garanti.getAccount9("TR3").isPresent());
@@ -144,4 +147,16 @@ class BankTest {
 		assertNull(garanti.getAccountValue("TR5"));
 	}
 
+	@Test
+	void generateReport() {
+		Bank garanti = new Bank(1, "Garanti Bankası A.Ş.");
+		Customer jack = garanti.createCustomer("1", "Jack Bauer");
+		Customer kate = garanti.createCustomer("2", "Kate Austen");
+		jack.addAccount(new Account("TR1", 100_000));
+		jack.addAccount(new CheckingAccount("TR2", 200_000, 20_000));
+		assertEquals(2, jack.getNumOfAccounts());
+		kate.addAccount(new CheckingAccount("TR3", 300_000, 30_000));
+		kate.addAccount(new Account("TR4", 400_000));
+		garanti.generateReport();
+	}
 }

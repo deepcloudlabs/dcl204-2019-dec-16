@@ -16,6 +16,7 @@ class CustomerTest {
 		assertEquals(0, jack.getNumOfAccounts());
 		jack.addAccount(new Account("TR1", 1_000));
 		assertEquals(1, jack.getNumOfAccounts());
+		assertTrue(jack.toString().contains("identity="));
 	}
 
 	@Test
